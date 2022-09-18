@@ -7,11 +7,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<StoreDbContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("SportsStoreConnection")));
 builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+builder.Services.AddRazorPages();
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
 
 var app = builder.Build();
 app.UseDeveloperExceptionPage();
 app.UseStatusCodePages();
 app.UseStaticFiles();
+app.UseSession();
 app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
@@ -28,6 +32,7 @@ app.UseEndpoints(endpoints =>
     new { Controller = "Home", action = "Index", productPage = 1 });
 
     endpoints.MapDefaultControllerRoute();
+    endpoints.MapRazorPages();
 });
 //app.MapGet("/", () => "Hello World!");
 SeedData.EnsurePopulated(app);
